@@ -11,4 +11,6 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     Optional<File> findByFileName(String fileName);
 
+    Boolean existsByFileName(String fileName);
+
 }
