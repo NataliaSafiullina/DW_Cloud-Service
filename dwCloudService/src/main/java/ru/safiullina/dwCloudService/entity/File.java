@@ -20,9 +20,8 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User userId;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private User user;
 
     @Column(name = "file_name")
     private String fileName;
