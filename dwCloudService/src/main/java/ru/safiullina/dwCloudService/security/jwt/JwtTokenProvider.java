@@ -25,7 +25,7 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
-    public static final String HEADER = "Authorization";
+    public static final String HEADER = "auth-token";
     public static final String JWT_TOKEN_HEADER_PARAM = HEADER;
     public static final String HEADER_PREFIX = "Bearer ";
     private final UserDetailsService userDetailsService;
@@ -44,11 +44,9 @@ public class JwtTokenProvider {
 
     public JwtPair generateTokenPair(final UserDetails user) {
 
-        System.out.println("10 ++ " + user.toString());
         String token = createToken(user);
         String refreshToken = createRefreshToken(user);
 
-        System.out.println("12 ++ " + token + "  " + refreshToken);
         return new JwtPair(token, refreshToken);
     }
 
@@ -62,8 +60,6 @@ public class JwtTokenProvider {
     }
 
     private String createToken(final UserDetails user) {
-
-        System.out.println("11 ++ " + user.toString());
 
         return Jwts.builder()
                 .setSubject(user.getUsername())

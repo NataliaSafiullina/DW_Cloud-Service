@@ -23,8 +23,4 @@ public class AuthController {
         return userService.addUser(new User(signUpRequest.getLogin(), signUpRequest.getPassword()));
     }
 
-    @GetMapping("/count")
-    public Long getUsersCount() {
-        return userService.getUsersCount();
-    }
 }
