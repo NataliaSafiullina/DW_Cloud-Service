@@ -38,6 +38,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
     @Override
     public Authentication attemptAuthentication(final HttpServletRequest request,
                                                 final HttpServletResponse response) throws AuthenticationException {
+        System.out.println("1 +++ " + request.getMethod() + request.toString());
         if (!HttpMethod.POST.name().equals(request.getMethod())) {
             if(logger.isDebugEnabled()) {
                 logger.debug("Authentication method not supported. Request method: " + request.getMethod());
@@ -49,6 +50,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 
         try {
             loginDTO = JsonUtils.fromReader(request.getReader(), LoginRequest.class);
+            System.out.println("2 +++ " + loginDTO.toString());
         } catch (Exception e) {
             throw new AuthenticationServiceException("Invalid login request payload");
         }
@@ -57,6 +59,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
             throw new AuthenticationServiceException("Username or Password not provided");
         }
 
+        System.out.println("3 +++ " + loginDTO.getLogin() + loginDTO.getPassword());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDTO.getLogin(), loginDTO.getPassword());
         token.setDetails(authenticationDetailsSource.buildDetails(request));
         return this.getAuthenticationManager().authenticate(token);
@@ -66,12 +69,16 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
     protected void successfulAuthentication(final HttpServletRequest request,
                                             final HttpServletResponse response,
                                             final FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        System.out.println("4 +++ " + authResult.isAuthenticated());
         this.successHandler.onAuthenticationSuccess(request, response, authResult);
     }
 
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException, ServletException {
+        System.out.println("5 +++ unsuccessfulAuthentication");
         this.failureHandler.onAuthenticationFailure(request, response, failed);
     }
 }

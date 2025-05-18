@@ -1,8 +1,10 @@
 package ru.safiullina.dwCloudService.security.jwt;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class JwtPair {
 
     private final String token;

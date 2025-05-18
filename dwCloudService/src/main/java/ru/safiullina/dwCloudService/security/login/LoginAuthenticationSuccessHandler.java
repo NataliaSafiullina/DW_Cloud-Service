@@ -28,10 +28,20 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
+
+        System.out.println("6 +++ " + authentication.isAuthenticated());
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        System.out.println("7 +++ " + userDetails.toString());
+
         JwtPair jwtPair = tokenProvider.generateTokenPair(userDetails);
+        System.out.println("8 +++ " + jwtPair.toString());
+
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        System.out.println("9 +++ " + response.getStatus() + "  " + response.toString());
+
+        //TODO: сделать возврат ответа d нужном формате LoginResponse
         JsonUtils.writeValue(response.getWriter(), jwtPair);
 
     }
