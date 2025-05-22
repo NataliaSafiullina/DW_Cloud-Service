@@ -36,7 +36,7 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
 
         System.out.println("3 +++ Token = " + jwtPair.getToken());
 
-        //TODO: сделать возврат ответа d нужном формате LoginResponse
+        //TODO: сделать возврат ответа в нужном формате LoginResponse
         JsonUtils.writeValue(response.getWriter(), jwtPair);
 
     }

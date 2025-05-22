@@ -4,7 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
@@ -29,6 +29,8 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
     }
 
     @Override
+    @Bean
+    // 1
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         System.out.println("4 +++ Token from request = " + tokenProvider.getTokenFromRequest(request));
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(tokenProvider.getTokenFromRequest(request)));
@@ -39,9 +41,13 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
                                             final HttpServletResponse response,
                                             final FilterChain chain,
                                             final Authentication authResult) throws IOException, ServletException {
+
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
+
+        System.out.println("67 +++ User = " + SecurityContextHolder.getContext().getAuthentication().getName());
+
         chain.doFilter(request, response);
     }
 
