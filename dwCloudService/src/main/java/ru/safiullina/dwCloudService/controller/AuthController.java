@@ -1,7 +1,7 @@
 package ru.safiullina.dwCloudService.controller;
 
 import org.springframework.web.bind.annotation.*;
-import ru.safiullina.dwCloudService.dto.LoginRequest;
+import ru.safiullina.dwCloudService.dto.SignupRequest;
 import ru.safiullina.dwCloudService.entity.User;
 import ru.safiullina.dwCloudService.exeption.ServiceException;
 import ru.safiullina.dwCloudService.service.UserService;
@@ -17,7 +17,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public User registerUser(@RequestBody final LoginRequest signUpRequest) throws ServiceException {
+    public User registerUser(@RequestBody final SignupRequest signUpRequest) throws ServiceException {
         return userService.addUser(new User(signUpRequest.getLogin(), signUpRequest.getPassword()));
     }
 
