@@ -1,37 +1,27 @@
 package ru.safiullina.dwCloudService.controller;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.safiullina.dwCloudService.security.jwt.JwtTokenProvider;
-import ru.safiullina.dwCloudService.security.jwt.TokenAuthenticationProvider;
+import ru.safiullina.dwCloudService.service.JwtService;
 import ru.safiullina.dwCloudService.service.UserService;
 
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/cloud")
 public class BusinessController {
 
     private final UserService userService;
+    private final JwtService jwtService;
 
-    public BusinessController(UserService userService, JwtTokenProvider jwtTokenProvider) {
+    public BusinessController(UserService userService, JwtTokenProvider jwtTokenProvider, JwtService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping("/count")
-    public Long getUsersCount(@RequestHeader("auth-token") String authToken,
-                              @AuthenticationPrincipal UserDetails userDetails,
-                              Principal principal,
-                              final JwtTokenProvider tokenProvider,
-                              final Authentication authentication) {
-        System.out.println("5 +++ Token from header = " + authToken );
-        //String userName = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        //String userName = tokenProvider.getUserNameFromJwtToken(authToken);
-        //String userName = TokenAuthenticationProvider.
-        //String userName = authentication.getName();
-        System.out.println("6 +++ User = " );
+    public Long getUsersCount(@RequestHeader("auth-token") String authToken) {
+        System.out.println("5 +++ Token from header = " + authToken);
+        System.out.println("51 +++ Парсер из сервиса = " + jwtService.extractUsernameFromToken(authToken));
         return userService.getUsersCount();
     }
 

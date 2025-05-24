@@ -41,7 +41,6 @@ public class UserService {
     }
 
 
-
     public User findByUsername(String username) throws ServiceException {
         return userRepository.findByLogin(username)
                 .orElseThrow(() -> new ServiceException(HttpStatus.BAD_REQUEST, "exception.user.notFound"));

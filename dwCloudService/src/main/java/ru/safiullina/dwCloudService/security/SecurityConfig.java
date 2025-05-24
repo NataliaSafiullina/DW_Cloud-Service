@@ -54,17 +54,20 @@ public class SecurityConfig {
      *
      * @param http - объект, в котором сконфигурируем ограничения доступа.
      * @return какой способ аутентификации использовать и для какого endpoint
-     * @throws Exception
      */
     @Bean
     SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+
+        // SessionCreationPolicy.STATELESS - SpringSSecurity не создаст сессию HttpSession и
+        // не будет использовать его для получения SecurityContext.
+        // SessionCreationPolicy.ALWAYS - создастся сессия HttpSession.
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(configurer -> configurer
                         .accessDeniedHandler(accessDeniedHandler))
                 .sessionManagement(configurer -> configurer
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(SIGNUP_ENDPOINT).permitAll()
                         .requestMatchers(LOGIN_ENDPOINT).permitAll()

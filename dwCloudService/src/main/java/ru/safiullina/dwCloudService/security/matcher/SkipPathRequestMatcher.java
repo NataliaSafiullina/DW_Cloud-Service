@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *  Класс SkipPathRequestMatcher (как показано ниже),
- *  который исключает пути, заданные в параметре pathsToSkip, из путей фильтра.
+ * Класс SkipPathRequestMatcher (как показано ниже),
+ * который исключает пути, заданные в параметре pathsToSkip, из путей фильтра.
  */
 public class SkipPathRequestMatcher implements RequestMatcher {
     private final OrRequestMatcher matchers;

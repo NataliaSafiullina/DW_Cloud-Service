@@ -28,14 +28,24 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
         this.failureHandler = failureHandler;
     }
 
+    /**
+     * Этот метод выполняется первым при вхоже по токену
+     *
+     * @param request  from which to extract parameters and perform the authentication
+     * @param response the response, which may be needed if the implementation has to do a
+     *                 redirect as part of a multi-stage authentication process (such as OIDC).
+     * @return Authentication
+     */
     @Override
     @Bean
-    // 1
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         System.out.println("4 +++ Token from request = " + tokenProvider.getTokenFromRequest(request));
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(tokenProvider.getTokenFromRequest(request)));
     }
 
+    /**
+     * Действия при успешной аутентификации по Токену.
+     */
     @Override
     protected void successfulAuthentication(final HttpServletRequest request,
                                             final HttpServletResponse response,
@@ -45,8 +55,6 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
-
-        System.out.println("67 +++ User = " + SecurityContextHolder.getContext().getAuthentication().getName());
 
         chain.doFilter(request, response);
     }

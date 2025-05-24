@@ -60,12 +60,11 @@ public class JwtTokenProvider {
     }
 
     private String createToken(final UserDetails user) {
-
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(getExpiryDate(tokenExpirationInSec))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
 

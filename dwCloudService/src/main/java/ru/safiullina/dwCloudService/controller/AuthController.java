@@ -1,7 +1,5 @@
 package ru.safiullina.dwCloudService.controller;
 
-import org.apache.tomcat.websocket.AuthenticationException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.safiullina.dwCloudService.dto.LoginRequest;
 import ru.safiullina.dwCloudService.entity.User;

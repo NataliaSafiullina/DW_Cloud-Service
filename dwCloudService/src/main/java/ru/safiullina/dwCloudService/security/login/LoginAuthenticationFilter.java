@@ -1,5 +1,9 @@
 package ru.safiullina.dwCloudService.security.login;
 
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import ru.safiullina.dwCloudService.security.exeption.AuthMethodNotSupportedException;
 import ru.safiullina.dwCloudService.utils.JsonUtils;
 import jakarta.servlet.FilterChain;
@@ -27,6 +31,10 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
     private Logger logger = LoggerFactory.getLogger(LoginAuthenticationFilter.class);
     private final AuthenticationSuccessHandler successHandler;
     private final AuthenticationFailureHandler failureHandler;
+
+    private final SecurityContextRepository securityContextRepository =
+            new HttpSessionSecurityContextRepository();
+
     public LoginAuthenticationFilter(final String defaultFilterProcessesUrl,
                                      final AuthenticationSuccessHandler successHandler,
                                      final AuthenticationFailureHandler failureHandler) {
@@ -40,7 +48,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
                                                 final HttpServletResponse response) throws AuthenticationException {
 
         if (!HttpMethod.POST.name().equals(request.getMethod())) {
-            if(logger.isDebugEnabled()) {
+            if (logger.isDebugEnabled()) {
                 logger.debug("Authentication method not supported. Request method: " + request.getMethod());
             }
             throw new AuthMethodNotSupportedException("Authentication method not supported");
@@ -61,14 +69,32 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDTO.getLogin(), loginDTO.getPassword());
         token.setDetails(authenticationDetailsSource.buildDetails(request));
+
         return this.getAuthenticationManager().authenticate(token);
     }
 
+    /**
+     * Действия при успешной аутентификации по Логину.
+     */
     @Override
     protected void successfulAuthentication(final HttpServletRequest request,
                                             final HttpServletResponse response,
                                             final FilterChain chain, Authentication authResult) throws IOException, ServletException {
         System.out.println("2 +++ isAuthenticated = " + authResult.isAuthenticated());
+
+        // Create empty security context and set authentication.
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authResult);
+        SecurityContextHolder.setContext(context);
+
+        // TODO: если не получится получить пришедшего пользователя из других мест,
+        //  тут сделать сохранение пары user + token в БД, затирать если пара уже есть
+        System.out.println("21 +++ Authentication = " + context.getAuthentication());
+
+        // Save the security context to the repo (This adds it to the HTTP session).
+        // Но данные исчезнут при перезапуске приложения.
+        securityContextRepository.saveContext(context, request, response);
+
         this.successHandler.onAuthenticationSuccess(request, response, authResult);
     }
 

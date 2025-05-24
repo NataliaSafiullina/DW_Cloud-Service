@@ -1,12 +1,7 @@
 package ru.safiullina.dwCloudService.security;
 
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.safiullina.dwCloudService.security.jwt.TokenAuthenticationProvider;
 import ru.safiullina.dwCloudService.security.login.LoginAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
