@@ -6,6 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * +----------+--------------+------+-----+---------+----------------+
+ * | Field    | Type         | Null | Key | Default | Extra          |
+ * +----------+--------------+------+-----+---------+----------------+
+ * | id       | bigint       | NO   | PRI | NULL    | auto_increment |
+ * | login    | varchar(255) | YES  | UNI | NULL    |                |
+ * | password | varchar(255) | YES  |     | NULL    |                |
+ * +----------+--------------+------+-----+---------+----------------+
+ */
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
