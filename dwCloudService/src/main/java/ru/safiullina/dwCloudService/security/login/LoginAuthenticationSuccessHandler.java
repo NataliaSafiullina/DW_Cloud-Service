@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import ru.safiullina.dwCloudService.dto.LoginResponse;
 import ru.safiullina.dwCloudService.security.jwt.JwtPair;
 import ru.safiullina.dwCloudService.security.jwt.JwtTokenProvider;
 import ru.safiullina.dwCloudService.utils.JsonUtils;
@@ -31,13 +32,18 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         JwtPair jwtPair = tokenProvider.generateTokenPair(userDetails);
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         System.out.println("3 +++ Token = " + jwtPair.getToken());
 
-        //TODO: сделать возврат ответа в нужном формате LoginResponse
-        JsonUtils.writeValue(response.getWriter(), jwtPair);
+        // Формируем ответ в нужном формате LoginResponse
+        // Media type = application/json
+        // { "auth-token" : "string" }
+        // Изменение стиля обеспечивается за счет аннотации @JsonProperty("auth-token")
+        response.setStatus(HttpStatus.OK.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        LoginResponse loginResponse = new LoginResponse(jwtPair.getToken());
+
+        JsonUtils.writeValue(response.getWriter(), loginResponse);
 
     }
 }
