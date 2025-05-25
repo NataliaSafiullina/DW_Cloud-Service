@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 import ru.safiullina.dwCloudService.entity.User;
 import ru.safiullina.dwCloudService.service.UserDetailsImpl;
 import ru.safiullina.dwCloudService.service.UserService;
+import ru.safiullina.dwCloudService.utils.ResponseText;
 
 @Component
 public class LoginAuthenticationProvider implements AuthenticationProvider {
@@ -42,7 +43,7 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
     private UserDetails authenticateByUsernameAndPassword(final String username, final String password) {
         User user = getUser(username);
         if (!encoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException("exception.badCredentials");
+            throw new BadCredentialsException(ResponseText.UNAUTHORIZED_ERROR);
         }
         return UserDetailsImpl.build(user);
     }

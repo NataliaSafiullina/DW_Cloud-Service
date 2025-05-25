@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.safiullina.dwCloudService.utils.ResponseText;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,12 +35,14 @@ public class ErrorResponseHandler implements AccessDeniedHandler {
             return;
         }
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        if (exception instanceof AuthenticationException) {
-            handleAuthenticationException((AuthenticationException) exception, response);
-        } else if (exception instanceof ServiceException) {
-            handleServiceException((ServiceException) exception, response);
-        } else {
-            handleInternalServerError(exception, response);
+        switch (exception) {
+            case AuthenticationException authenticationException ->
+                    handleAuthenticationException(authenticationException, response);
+            case ServiceException serviceException ->
+                    handleServiceException(serviceException, response);
+            case ErrorInputDataException errorInputDataException ->
+                    handleErrorInputDataException(errorInputDataException, response);
+            default -> handleInternalServerError(exception, response);
         }
     }
 
@@ -50,6 +53,11 @@ public class ErrorResponseHandler implements AccessDeniedHandler {
 
     private static void handleServiceException(ServiceException exception, HttpServletResponse response) {
         response.setStatus(HttpStatus.FORBIDDEN.value());
+        JsonUtils.writeValue(getWriter(response), new ErrorMessageResponse(exception.getMessage(), 0));
+    }
+
+    private static void handleErrorInputDataException(ErrorInputDataException exception, HttpServletResponse response) {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
         JsonUtils.writeValue(getWriter(response), new ErrorMessageResponse(exception.getMessage(), 0));
     }
 
@@ -70,7 +78,7 @@ public class ErrorResponseHandler implements AccessDeniedHandler {
         }
         if (authenticationException instanceof BadCredentialsException || authenticationException instanceof UsernameNotFoundException) {
             JsonUtils.writeValue(getWriter(response),
-                    new ErrorMessageResponse("exception.badCredentials", HttpStatus.UNAUTHORIZED.value()));
+                    new ErrorMessageResponse(ResponseText.UNAUTHORIZED_ERROR, HttpStatus.UNAUTHORIZED.value()));
         } else {
             JsonUtils.writeValue(getWriter(response),
                     new ErrorMessageResponse("exception.authenticationFailed", HttpStatus.UNAUTHORIZED.value()));

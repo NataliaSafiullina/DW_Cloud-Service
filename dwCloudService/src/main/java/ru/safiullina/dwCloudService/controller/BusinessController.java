@@ -82,4 +82,25 @@ public class BusinessController {
 
         return ResponseEntity.badRequest().body("Ошибка получения файла");
     }
+
+    @DeleteMapping("/file")
+    public ResponseEntity<?> deleteFile(@RequestHeader("auth-token") String authToken,
+                                        @RequestParam("filename") String fileName) {
+
+        return fileService.deleteFile(authToken, fileName);
+    }
+
+    // TODO: put file
+    @PutMapping("/file")
+    public ResponseEntity<?> putFile() {
+        return null;
+    }
+
+    // TODO: get list
+    @GetMapping("/list")
+    public ResponseEntity<?> getList() {
+        return null;
+    }
+
+
 }
