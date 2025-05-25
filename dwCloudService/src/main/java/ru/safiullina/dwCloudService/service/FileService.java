@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.safiullina.dwCloudService.dto.FileListResponse;
 import ru.safiullina.dwCloudService.entity.File;
 import ru.safiullina.dwCloudService.entity.User;
 import ru.safiullina.dwCloudService.exeption.ErrorInputDataException;
@@ -13,6 +14,8 @@ import ru.safiullina.dwCloudService.repository.FileRepository;
 import ru.safiullina.dwCloudService.utils.ResponseText;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,54 +33,133 @@ public class FileService {
         this.jwtService = jwtService;
     }
 
-    public void saveFile(MultipartFile file, String fileName, String hash, String userName) throws IOException {
+    @Transactional
+    public ResponseEntity<?> saveFile(MultipartFile file, String fileName, String hash, String token) throws IOException {
 
-        if (userService.existsByUsername(userName)) {
-            User user = userService.findByUsername(userName);
-            File fileEntity = new File(user, fileName, hash, file.getBytes());
-            fileRepository.save(fileEntity);
+        // Ищем пользователя в БД
+        Optional<User> user = userService.findUserByToken(token);
+        if (user.isEmpty()) {
+            throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
         }
+
+        // Проверим, что имя файла уникально
+        if (fileRepository.existsByFileNameAndUser(fileName, user.get())) {
+            throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
+        }
+
+        // Сохраняем файл и проверяем, что мы сохранили
+        File fileEntity = new File(user.get(), fileName, hash, file.getBytes());
+        File savedFile = fileRepository.save(fileEntity);
+        if (!fileEntity.equals(savedFile)) {
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ResponseText.ERROR_INPUT_DATA);
+        }
+
+        return new ResponseEntity<>(ResponseText.SUCCESS_UPLOAD, HttpStatus.OK);
     }
 
-    public Boolean existFile(String fileName) {
-        return fileRepository.existsByFileName(fileName);
-    }
 
-    public byte[] getFile(String fileName) {
-        if (fileRepository.existsByFileName(fileName)) {
-            return fileRepository.findByFileName(fileName).get().getFileContent();
+    @Transactional
+    public byte[] getFile(String fileName, String token) {
+
+        // Ищем пользователя в БД
+        Optional<User> user = userService.findUserByToken(token);
+        if (user.isEmpty()) {
+            throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
         }
-        return null;
+
+        // Проверим, существует ли файл.
+        if (!fileRepository.existsByFileNameAndUser(fileName, user.get())) {
+            throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
+        }
+
+        // Получаем файл из БД
+        Optional<File> file = fileRepository.findByFileNameAndUser(fileName, user.get());
+        if (file.isEmpty()) {
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_UPLOAD_DATA);
+        }
+
+        return file.get().getFileContent();
     }
 
     @Transactional
     public ResponseEntity<?> deleteFile(String token, String fileName) {
 
-        // Получаем имя пользователя из токена.
-        String userName = jwtService.extractUsernameFromToken(token);
-        // Получаем объект пользователя по его имени.
-        User user = userService.findByUsername(userName);
-        if (user == null) {
-            // Бросаем исключение и попадаем в итоге в handleErrorInputDataException()
+        // Ищем пользователя в БД
+        Optional<User> user = userService.findUserByToken(token);
+        if (user.isEmpty()) {
+            throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
+        }
+
+        // Вообще сюда не должно попадать, если сохранение не давало сохранять файл с таким же именем
+        if (fileRepository.countByFileNameAndUser(fileName, user.get()) > 1) {
+            fileRepository.deleteByFileNameAndUserId(fileName, user.get().getId());
+            return new ResponseEntity<>(ResponseText.SUCCESS_DELETED, HttpStatus.OK);
+        }
+
+        // Проверяем существует ли у данного пользователя требуемый файл.
+        // И сразу его найдем.
+        Optional<File> file = fileRepository.findByFileNameAndUser(fileName, user.get());
+        if (file.isEmpty()) {
+            throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
+        }
+
+        System.out.println("61 +++ File ID = " + file.get().getId());
+
+        // Пытаемся удалить файл.
+        fileRepository.deleteById(file.get().getId());
+        // Проверим, что файл удален.
+        if (fileRepository.existsByFileNameAndUser(fileName, user.get())) {
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_DELETE_FILE);
+        }
+
+        return new ResponseEntity<>(ResponseText.SUCCESS_DELETED, HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<?> putFile(String token, String fileName, MultipartFile fileForPut) throws IOException {
+
+        // Ищем пользователя в БД
+        Optional<User> user = userService.findUserByToken(token);
+        if (user.isEmpty()) {
             throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
         }
 
         // Проверяем существует ли у данного пользователя требуемый файл.
         // И сразу его найдем.
-        Optional<File> file = fileRepository.findByFileNameAndUser(fileName, user);
+        Optional<File> file = fileRepository.findByFileNameAndUser(fileName, user.get());
         if (file.isEmpty()) {
             throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
         }
 
-        System.out.println(" +++ File ID = " + file.get().getId());
+        System.out.println("62 +++ File ID = " + file.get().getId());
 
-        // Пытаемся удалить файл.
-        fileRepository.deleteAllById(file.get().getId());
-        // Проверим, что файл удален.
-        if (fileRepository.existsByFileNameAndUser(fileName, user)) {
-            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_DELETE_FILE);
+        // Пытаемся обновить файл
+        fileRepository.updateById(file.get().getId(), fileForPut.getBytes());
+
+        return new ResponseEntity<>(ResponseText.SUCCESS_UPLOAD, HttpStatus.OK);
+    }
+
+    @Transactional
+    public List<FileListResponse> getListFiles(String token, Integer limit) {
+
+        // Ищем пользователя в БД
+        Optional<User> user = userService.findUserByToken(token);
+        if (user.isEmpty()) {
+            throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
         }
 
-        return new ResponseEntity<>(ResponseText.SUCCESS_DELETED, HttpStatus.OK);
+        // Пытаемся получить список файлов.
+        List<FileListResponse> fileListResponses = new ArrayList<>();
+        try {
+            List<File> fileList = fileRepository.findByUserWithLimit(user.get().getId(), limit);
+
+            for (File file : fileList) {
+                fileListResponses.add(new FileListResponse(file.getFileName(), file.getFileContent().length));
+            }
+        } catch (Exception e) {
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR,ResponseText.ERROR_GET_FILE_LIST);
+        }
+
+        return fileListResponses;
     }
 }

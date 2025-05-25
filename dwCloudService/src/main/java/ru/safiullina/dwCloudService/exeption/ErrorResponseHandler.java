@@ -74,7 +74,7 @@ public class ErrorResponseHandler implements AccessDeniedHandler {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         if (authenticationException instanceof ExpiredTokenException) {
             JsonUtils.writeValue(getWriter(response),
-                    new ErrorMessageResponse("exception.tokenExpired", HttpStatus.UNAUTHORIZED.value()));
+                    new ErrorMessageResponse(ResponseText.UNAUTHORIZED_ERROR, HttpStatus.UNAUTHORIZED.value()));
         }
         if (authenticationException instanceof BadCredentialsException || authenticationException instanceof UsernameNotFoundException) {
             JsonUtils.writeValue(getWriter(response),

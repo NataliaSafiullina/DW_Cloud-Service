@@ -1,10 +1,7 @@
 package ru.safiullina.dwCloudService.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * +--------------+--------------+------+-----+---------+----------------+
@@ -22,6 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "files")
 public class File {

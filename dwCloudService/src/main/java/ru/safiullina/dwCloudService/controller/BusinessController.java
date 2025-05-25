@@ -5,11 +5,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.safiullina.dwCloudService.dto.FileListResponse;
+import ru.safiullina.dwCloudService.exeption.ErrorInputDataException;
 import ru.safiullina.dwCloudService.service.FileService;
 import ru.safiullina.dwCloudService.service.JwtService;
 import ru.safiullina.dwCloudService.service.UserService;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/cloud")
@@ -41,22 +44,7 @@ public class BusinessController {
                                       @RequestPart("hash") String hash,
                                       @RequestPart("file") MultipartFile file) throws IOException {
 
-        if (!file.isEmpty()) {
-            // Обработка файла (например, сохранение)
-            System.out.println("Имя файла: " + file.getOriginalFilename());
-
-            String userName = jwtService.extractUsernameFromToken(authToken);
-            fileService.saveFile(file, fileName, hash, userName);
-
-            if (fileService.existFile(fileName)) {
-                return ResponseEntity.ok("Файл успешно принят и загружен!");
-            } else {
-                return ResponseEntity.ok("Файл успешно принят, но не сохранен.");
-            }
-
-        }
-
-        return ResponseEntity.badRequest().body("Ошибка загрузки файла");
+        return fileService.saveFile(file,fileName,hash,authToken);
     }
 
     /**
@@ -65,8 +53,9 @@ public class BusinessController {
     @GetMapping("/file")
     public ResponseEntity<?> getFile(@RequestHeader("auth-token") String authToken,
                                      @RequestParam("filename") String fileName) {
+        // TODO: переписать, логику перенести в сервис, отформатировать ответ
 
-        byte[] fileContent = fileService.getFile(fileName);
+        byte[] fileContent = fileService.getFile(fileName, authToken);
         if (fileContent != null) {
 
             HttpHeaders headers = new HttpHeaders();
@@ -90,16 +79,19 @@ public class BusinessController {
         return fileService.deleteFile(authToken, fileName);
     }
 
-    // TODO: put file
     @PutMapping("/file")
-    public ResponseEntity<?> putFile() {
-        return null;
+    public ResponseEntity<?> putFile(@RequestHeader("auth-token") String authToken,
+                                     @RequestParam("filename") String fileName,
+                                     @RequestPart("file") MultipartFile file) throws IOException {
+
+        return fileService.putFile(authToken,fileName,file);
     }
 
     // TODO: get list
     @GetMapping("/list")
-    public ResponseEntity<?> getList() {
-        return null;
+    public List<FileListResponse> getList(@RequestHeader("auth-token") String authToken,
+                                          @RequestParam("limit") Integer limit) {
+        return fileService.getListFiles(authToken, limit);
     }
 
 
