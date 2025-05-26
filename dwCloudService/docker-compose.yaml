@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mysql_db:
+    image: mysql:latest
+    container_name: cloud_db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: netology
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    volumes:
+      - ./dbdata:/var/lib/mysql/
+
+  cloudservice:
+    image: 'cloudservice:latest'
+    container_name: cloud_service
+    depends_on:
+      - mysql_db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/netology
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: pass
+    ports:
+      - '8080:8080'
+volumes:
+  mysql-data:

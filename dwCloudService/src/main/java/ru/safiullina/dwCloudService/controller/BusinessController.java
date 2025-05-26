@@ -87,7 +87,6 @@ public class BusinessController {
         return fileService.putFile(authToken,fileName,file);
     }
 
-    // TODO: get list
     @GetMapping("/list")
     public List<FileListResponse> getList(@RequestHeader("auth-token") String authToken,
                                           @RequestParam("limit") Integer limit) {
