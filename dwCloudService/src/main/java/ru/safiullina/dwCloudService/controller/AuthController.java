@@ -22,10 +22,13 @@ public class AuthController {
         return userService.addUser(new User(signUpRequest.getLogin(), signUpRequest.getPassword()));
     }
 
-    // TODO: post logout
+    /**
+     * Клиентская сторона должна удалить токен из своего хранилища.
+     */
     @PostMapping("logout")
-    public ResponseEntity<?> logoutUser(){
-        return null;
+    public ResponseEntity<String> logoutUser(@RequestHeader("auth-token") String authToken){
+        // Тут можно добавлять токен в черный список, но так не правильно
+        return ResponseEntity.ok("Success logout");
     }
 
 }

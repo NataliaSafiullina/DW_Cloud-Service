@@ -43,6 +43,8 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         LoginResponse loginResponse = new LoginResponse(jwtPair.getToken());
 
+        // TODO: Как ответить 200 Success authorization?
+
         JsonUtils.writeValue(response.getWriter(), loginResponse);
 
     }

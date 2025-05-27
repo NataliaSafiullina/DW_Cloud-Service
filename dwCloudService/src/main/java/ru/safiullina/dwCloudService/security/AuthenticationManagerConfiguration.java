@@ -8,7 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 
-
+/**
+ * AuthenticationManager не выполняет аутентификацию,
+ * он служит контейнером для провайдеров, которые выполняют эту задачу.
+ * Интерфейс AuthenticationManager берет на себя ответственность за поиск подходящего провайдера
+ * и передачу ему запроса.
+ * Здесь у нас создание менеджера и регистрация провайдеров.
+ */
 @Configuration
 public class AuthenticationManagerConfiguration {
 

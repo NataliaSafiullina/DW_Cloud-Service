@@ -38,6 +38,7 @@ public class BusinessController {
     /**
      * Сохранение файла в БД
      */
+    // TODO: причесать ответы post file
     @PostMapping("/file")
     public ResponseEntity<?> postFile(@RequestHeader("auth-token") String authToken,
                                       @RequestParam("filename") String fileName,
@@ -50,10 +51,11 @@ public class BusinessController {
     /**
      *  Получение файла из БД и отправка на фронт.
      */
+    // TODO: причесать ответы get file
     @GetMapping("/file")
     public ResponseEntity<?> getFile(@RequestHeader("auth-token") String authToken,
                                      @RequestParam("filename") String fileName) {
-        // TODO: переписать, логику перенести в сервис, отформатировать ответ
+        // TODO: переписать, логику перенести в сервис
 
         byte[] fileContent = fileService.getFile(fileName, authToken);
         if (fileContent != null) {
@@ -72,6 +74,7 @@ public class BusinessController {
         return ResponseEntity.badRequest().body("Ошибка получения файла");
     }
 
+    // TODO: причесать ответы delete file
     @DeleteMapping("/file")
     public ResponseEntity<?> deleteFile(@RequestHeader("auth-token") String authToken,
                                         @RequestParam("filename") String fileName) {
@@ -79,6 +82,7 @@ public class BusinessController {
         return fileService.deleteFile(authToken, fileName);
     }
 
+    // TODO: причесать ответы put file
     @PutMapping("/file")
     public ResponseEntity<?> putFile(@RequestHeader("auth-token") String authToken,
                                      @RequestParam("filename") String fileName,
@@ -87,6 +91,7 @@ public class BusinessController {
         return fileService.putFile(authToken,fileName,file);
     }
 
+    // TODO: причесать ответы get list
     @GetMapping("/list")
     public List<FileListResponse> getList(@RequestHeader("auth-token") String authToken,
                                           @RequestParam("limit") Integer limit) {

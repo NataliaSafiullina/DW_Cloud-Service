@@ -96,6 +96,11 @@ public class SecurityConfig {
         return filter;
     }
 
+    /**
+     * Фильтр логирования, который перехватывает запрос на адрес /login,
+     * и проверяет данные переданные для входа.
+     * @return фильтр
+     */
     @Bean
     protected LoginAuthenticationFilter buildLoginProcessingFilter() {
         LoginAuthenticationFilter filter = new LoginAuthenticationFilter(LOGIN_ENDPOINT,
@@ -104,6 +109,12 @@ public class SecurityConfig {
         return filter;
     }
 
+    /**
+     * CORS (Cross-Origin Resource Sharing)
+     * Совместное использование ресурсов между разными источниками (CORS) - это спецификация W3C,
+     * реализованная в большинстве браузеров, которая позволяет определять, какие междоменные запросы разрешены
+     * @return источник
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

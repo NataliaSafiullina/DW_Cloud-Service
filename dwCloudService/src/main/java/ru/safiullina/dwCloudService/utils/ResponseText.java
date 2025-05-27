@@ -11,4 +11,5 @@ public class ResponseText {
     public static final String UNAUTHORIZED_ERROR = "Unauthorized error";
     public static final String USERNAME_EXISTS = "Username already exists";
     public static final String USER_NOT_FOUND = "User not found";
+    public static final String BAD_CREDENTIALS = "Bad credentials";
 }

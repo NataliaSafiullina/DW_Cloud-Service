@@ -80,8 +80,9 @@ public class ErrorResponseHandler implements AccessDeniedHandler {
             JsonUtils.writeValue(getWriter(response),
                     new ErrorMessageResponse(ResponseText.UNAUTHORIZED_ERROR, HttpStatus.UNAUTHORIZED.value()));
         } else {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             JsonUtils.writeValue(getWriter(response),
-                    new ErrorMessageResponse("exception.authenticationFailed", HttpStatus.UNAUTHORIZED.value()));
+                    new ErrorMessageResponse(ResponseText.BAD_CREDENTIALS, HttpStatus.BAD_REQUEST.value()));
         }
     }
 
