@@ -145,6 +145,10 @@ public class FileService {
 
         // Пытаемся обновить файл
         fileRepository.updateById(file.get().getId(), fileForPut.getBytes());
+        Optional<File> savedFile = fileRepository.findById(file.get().getId());
+        if (savedFile.isEmpty() && !fileForPut.equals(savedFile)) {
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_UPLOAD_DATA);
+        }
 
         return new ResponseEntity<>(ResponseText.SUCCESS_UPLOAD, HttpStatus.OK);
     }
