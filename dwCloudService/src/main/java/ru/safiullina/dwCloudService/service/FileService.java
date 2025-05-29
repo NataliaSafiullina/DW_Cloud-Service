@@ -29,12 +29,10 @@ public class FileService {
 
     private final FileRepository fileRepository;
 
-    private final JwtService jwtService;
 
     public FileService(UserService userService, FileRepository fileRepository, JwtService jwtService) {
         this.userService = userService;
         this.fileRepository = fileRepository;
-        this.jwtService = jwtService;
     }
 
     @Transactional
@@ -79,7 +77,7 @@ public class FileService {
         // Получаем файл из БД
         Optional<File> file = fileRepository.findByFileNameAndUser(fileName, user.get());
         if (file.isEmpty()) {
-            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_UPLOAD_DATA);
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_UPLOAD_FILE);
         }
 
         // Устанавливаем Content-Type
@@ -147,7 +145,7 @@ public class FileService {
         fileRepository.updateById(file.get().getId(), fileForPut.getBytes());
         Optional<File> savedFile = fileRepository.findById(file.get().getId());
         if (savedFile.isEmpty() && !fileForPut.equals(savedFile)) {
-            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_UPLOAD_DATA);
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_UPLOAD_FILE);
         }
 
         return new ResponseEntity<>(ResponseText.SUCCESS_UPLOAD, HttpStatus.OK);

@@ -65,7 +65,6 @@ public class BusinessController {
         return fileService.deleteFile(authToken, fileName);
     }
 
-    // TODO: причесать ответы put file
     @PutMapping("/file")
     public ResponseEntity<?> putFile(@RequestHeader("auth-token") String authToken,
                                      @RequestParam("filename") String fileName,
@@ -74,7 +73,7 @@ public class BusinessController {
         return fileService.putFile(authToken,fileName,file);
     }
 
-    // TODO: причесать ответы get list
+
     @GetMapping("/list")
     public List<FileListResponse> getList(@RequestHeader("auth-token") String authToken,
                                           @RequestParam("limit") Integer limit) {
