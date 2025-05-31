@@ -53,7 +53,7 @@ public class FileService {
         File fileEntity = new File(user.get(), fileName, hash, file.getBytes());
         File savedFile = fileRepository.save(fileEntity);
         if (!fileEntity.equals(savedFile)) {
-            throw new ServiceException(HttpStatus.BAD_REQUEST, ResponseText.ERROR_INPUT_DATA);
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_UPLOAD_FILE);
         }
 
         return new ResponseEntity<>(ResponseText.SUCCESS_UPLOAD, HttpStatus.OK);
@@ -111,7 +111,6 @@ public class FileService {
             throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
         }
 
-        System.out.println("61 +++ File ID = " + file.get().getId());
 
         // Пытаемся удалить файл.
         fileRepository.deleteById(file.get().getId());
@@ -138,8 +137,6 @@ public class FileService {
         if (file.isEmpty()) {
             throw new ErrorInputDataException(ResponseText.ERROR_INPUT_DATA);
         }
-
-        System.out.println("62 +++ File ID = " + file.get().getId());
 
         // Пытаемся обновить файл
         fileRepository.updateById(file.get().getId(), fileForPut.getBytes());

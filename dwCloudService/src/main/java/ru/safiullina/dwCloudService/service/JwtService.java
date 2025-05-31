@@ -41,4 +41,10 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody().getSubject();
     }
+
+    public String getJwtSecret() {
+        return jwtSecret;
+    }
+
+
 }
