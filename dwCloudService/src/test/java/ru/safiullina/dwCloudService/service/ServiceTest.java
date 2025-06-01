@@ -36,10 +36,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Unit-тесты
+ * Unit-тесты (6.6.5 JUnit, 6.7 Mockito)
  * Протестируем сервисы (Service).
  * Вместо работы с БД (Repository) используем заглушки (mock).
- * {"login": "natasha1","password": "one"}
  */
 @SpringBootTest
 @ActiveProfiles("test")

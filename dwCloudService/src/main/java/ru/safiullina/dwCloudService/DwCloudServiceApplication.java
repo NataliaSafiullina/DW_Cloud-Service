@@ -13,5 +13,4 @@ public class DwCloudServiceApplication {
 }
 
 // TODO: поменять properties на yaml
-// TODO: Код покрыт unit-тестами с использованием mockito. (6.6.5 JUnit, 6.7 Mockito)
-// TODO: Добавлены интеграционные тесты с использованием testcontainers (10.5.1 TestContainers)
+
