@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: dwCloudService
+  datasource:
+    url: jdbc:mysql://localhost:3306/netology
+    username: root
+    password: pass
+    platform: mysql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+security:
+  jwt:
+    secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    tokenExpirationTime: 14400
+    refreshTokenExpirationTime: 86400
