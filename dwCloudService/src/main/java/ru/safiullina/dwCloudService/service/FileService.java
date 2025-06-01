@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.safiullina.dwCloudService.dto.FileListResponse;
-import ru.safiullina.dwCloudService.dto.FileResponse;
 import ru.safiullina.dwCloudService.entity.File;
 import ru.safiullina.dwCloudService.entity.User;
 import ru.safiullina.dwCloudService.exeption.ErrorInputDataException;
@@ -18,7 +17,6 @@ import ru.safiullina.dwCloudService.utils.ResponseText;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -166,7 +164,7 @@ public class FileService {
                 fileListResponses.add(new FileListResponse(file.getFileName(), file.getFileContent().length));
             }
         } catch (Exception e) {
-            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR,ResponseText.ERROR_GET_FILE_LIST);
+            throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseText.ERROR_GET_FILE_LIST);
         }
 
         return fileListResponses;

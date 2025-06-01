@@ -1,15 +1,14 @@
 package ru.safiullina.dwCloudService.service;
 
-import ru.safiullina.dwCloudService.exeption.ErrorInputDataException;
-import ru.safiullina.dwCloudService.exeption.ServiceException;
-import ru.safiullina.dwCloudService.repository.UserRepository;
-import ru.safiullina.dwCloudService.entity.User;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.safiullina.dwCloudService.entity.User;
+import ru.safiullina.dwCloudService.exeption.ErrorInputDataException;
+import ru.safiullina.dwCloudService.exeption.ServiceException;
+import ru.safiullina.dwCloudService.repository.UserRepository;
 import ru.safiullina.dwCloudService.utils.ResponseText;
 
 import java.util.Optional;

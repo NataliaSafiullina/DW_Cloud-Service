@@ -1,12 +1,8 @@
 package ru.safiullina.dwCloudService.exeption;
 
-import ru.safiullina.dwCloudService.dto.ErrorMessageResponse;
-import ru.safiullina.dwCloudService.security.exeption.ExpiredTokenException;
-import ru.safiullina.dwCloudService.utils.JsonUtils;
-
-import org.hibernate.service.spi.ServiceException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,6 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.safiullina.dwCloudService.dto.ErrorMessageResponse;
+import ru.safiullina.dwCloudService.security.exeption.ExpiredTokenException;
+import ru.safiullina.dwCloudService.utils.JsonUtils;
 import ru.safiullina.dwCloudService.utils.ResponseText;
 
 import java.io.IOException;
@@ -38,8 +37,7 @@ public class ErrorResponseHandler implements AccessDeniedHandler {
         switch (exception) {
             case AuthenticationException authenticationException ->
                     handleAuthenticationException(authenticationException, response);
-            case ServiceException serviceException ->
-                    handleServiceException(serviceException, response);
+            case ServiceException serviceException -> handleServiceException(serviceException, response);
             case ErrorInputDataException errorInputDataException ->
                     handleErrorInputDataException(errorInputDataException, response);
             default -> handleInternalServerError(exception, response);

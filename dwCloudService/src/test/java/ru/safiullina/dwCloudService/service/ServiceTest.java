@@ -20,6 +20,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import org.mockito.Mockito;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,6 +76,7 @@ class ServiceTest {
         Assertions.assertEquals("404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970",
                 jwtService.getJwtSecret());
     }
+
     @Disabled
     @Test
     void extractUsernameFromTokenTest() {
@@ -110,6 +112,7 @@ class ServiceTest {
 
         assertThat(HttpStatus.OK, is(fileService.saveFile(fileContent, fileName, hash, token).getStatusCode()));
     }
+
     @Test
     void saveFileTest400() {
         // Когда будем получать пользователя, вернём пустого пользователя
@@ -121,6 +124,7 @@ class ServiceTest {
                 , () -> fileService.saveFile(fileContent, userName, hash, token)
                 , ResponseText.ERROR_INPUT_DATA);
     }
+
     @Test
     void saveFileTest500() {
         // Когда будем получать пользователя, вернём пользователя user
@@ -150,11 +154,12 @@ class ServiceTest {
         Mockito.when(fileRepository.existsByFileNameAndUser(fileName, user))
                 .thenReturn(true);
         // Когда будем извлекать файл из БД, вернем наш объект file, он не пустой, всё отлично
-        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(),Mockito.any()))
+        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.ofNullable(fileEntity));
 
         assertThat(HttpStatus.OK, is(fileService.getFile(fileName, token).getStatusCode()));
     }
+
     @Test
     void getFileTest400() {
         // Когда будем получать пользователя, вернём user
@@ -169,6 +174,7 @@ class ServiceTest {
                 , () -> fileService.getFile(fileName, token)
                 , ResponseText.ERROR_INPUT_DATA);
     }
+
     @Test
     void getFileTest500() {
         // Когда будем получать пользователя, вернём пользователя user
@@ -189,7 +195,6 @@ class ServiceTest {
     }
 
 
-
     @Test
     void deleteFileTest200() {
         // Когда будем получать пользователя, вернём пользователя user
@@ -199,7 +204,7 @@ class ServiceTest {
         Mockito.when(fileRepository.countByFileNameAndUser(fileName, user))
                 .thenReturn(1);
         // Когда будем извлекать файл из БД, вернем наш объект file
-        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(),Mockito.any()))
+        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.ofNullable(fileEntity));
         // Когда будем проверять имя файла, что файл не существует
         Mockito.when(fileRepository.existsByFileNameAndUser(fileName, user))
@@ -207,6 +212,7 @@ class ServiceTest {
 
         assertThat(HttpStatus.OK, is(fileService.deleteFile(token, fileName).getStatusCode()));
     }
+
     @Test
     void deleteFileTest400() {
         // Когда будем получать пользователя, вернём user
@@ -216,7 +222,7 @@ class ServiceTest {
         Mockito.when(fileRepository.countByFileNameAndUser(fileName, user))
                 .thenReturn(1);
         // Когда будем извлекать файл из БД, вернем null
-        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(),Mockito.any()))
+        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
 
         // Получим исключение с текстом Error input data
@@ -224,6 +230,7 @@ class ServiceTest {
                 , () -> fileService.deleteFile(token, fileName)
                 , ResponseText.ERROR_INPUT_DATA);
     }
+
     @Test
     void deleteFileTest500() {
         // Когда будем получать пользователя, вернём пользователя user
@@ -233,7 +240,7 @@ class ServiceTest {
         Mockito.when(fileRepository.countByFileNameAndUser(fileName, user))
                 .thenReturn(1);
         // Когда будем извлекать файл из БД, вернем наш объект file
-        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(),Mockito.any()))
+        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.ofNullable(fileEntity));
         // Когда будем проверять имя файла, скажем, что файл существует
         Mockito.when(fileRepository.existsByFileNameAndUser(fileName, user))
@@ -253,7 +260,7 @@ class ServiceTest {
         Mockito.when(userService.findUserByToken(token))
                 .thenReturn(Optional.ofNullable(user));
         // Когда будем извлекать файл из БД, вернем наш объект file
-        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(),Mockito.any()))
+        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.ofNullable(fileEntity));
         // Когда будем извлекать файл из БД, вернем наш объект file
         Mockito.when(fileRepository.findById(Mockito.any()))
@@ -261,13 +268,14 @@ class ServiceTest {
 
         assertThat(HttpStatus.OK, is(fileService.putFile(token, fileName, fileContent).getStatusCode()));
     }
+
     @Test
     void putFileTest400() {
         // Когда будем получать пользователя, вернём пользователя user
         Mockito.when(userService.findUserByToken(token))
                 .thenReturn(Optional.ofNullable(user));
         // Когда будем извлекать файл из БД, вернем null
-        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(),Mockito.any()))
+        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
 
         // Получим исключение с текстом Error input data
@@ -275,13 +283,14 @@ class ServiceTest {
                 , () -> fileService.putFile(token, fileName, fileContent)
                 , ResponseText.ERROR_INPUT_DATA);
     }
+
     @Test
     void putFileTest500() {
         // Когда будем получать пользователя, вернём пользователя user
         Mockito.when(userService.findUserByToken(token))
                 .thenReturn(Optional.ofNullable(user));
         // Когда будем извлекать файл из БД, вернем file
-        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(),Mockito.any()))
+        Mockito.when(fileRepository.findByFileNameAndUser(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.ofNullable(fileEntity));
         // Когда будем извлекать файл из БД, вернем null
         Mockito.when(fileRepository.findById(Mockito.any()))
@@ -291,7 +300,7 @@ class ServiceTest {
         Throwable exception = assertThrows(ServiceException.class,
                 () -> fileService.putFile(token, fileName, fileContent));
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR +ResponseText.ERROR_UPLOAD_FILE, exception.getMessage());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR + ResponseText.ERROR_UPLOAD_FILE, exception.getMessage());
     }
 
 
@@ -308,6 +317,7 @@ class ServiceTest {
 
         assertNotNull(fileService.getListFiles(token, limit));
     }
+
     @Test
     void getListFilesTest400() {
         // Когда будем получать пользователя, вернём null
@@ -319,6 +329,7 @@ class ServiceTest {
                 , () -> fileService.getListFiles(token, limit)
                 , ResponseText.ERROR_INPUT_DATA);
     }
+
     @Test
     void getListFilesTest500() {
         // Когда будем получать пользователя, вернём пользователя user

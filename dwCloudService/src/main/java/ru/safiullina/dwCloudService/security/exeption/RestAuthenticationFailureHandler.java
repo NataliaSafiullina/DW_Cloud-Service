@@ -1,12 +1,12 @@
 package ru.safiullina.dwCloudService.security.exeption;
 
-import ru.safiullina.dwCloudService.exeption.ErrorResponseHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
+import ru.safiullina.dwCloudService.exeption.ErrorResponseHandler;
 
 @Component
 public class RestAuthenticationFailureHandler implements AuthenticationFailureHandler {

@@ -1,12 +1,9 @@
 package ru.safiullina.dwCloudService.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.safiullina.dwCloudService.dto.FileListResponse;
-import ru.safiullina.dwCloudService.exeption.ErrorInputDataException;
 import ru.safiullina.dwCloudService.service.FileService;
 import ru.safiullina.dwCloudService.service.JwtService;
 import ru.safiullina.dwCloudService.service.UserService;
@@ -44,11 +41,11 @@ public class BusinessController {
                                       @RequestPart("hash") String hash,
                                       @RequestPart("file") MultipartFile file) throws IOException {
 
-        return fileService.saveFile(file,fileName,hash,authToken);
+        return fileService.saveFile(file, fileName, hash, authToken);
     }
 
     /**
-     *  Получение файла из БД и отправка на фронт.
+     * Получение файла из БД и отправка на фронт.
      */
     @GetMapping("/file")
     public ResponseEntity<?> getFile(@RequestHeader("auth-token") String authToken,
@@ -70,7 +67,7 @@ public class BusinessController {
                                      @RequestParam("filename") String fileName,
                                      @RequestPart("file") MultipartFile file) throws IOException {
 
-        return fileService.putFile(authToken,fileName,file);
+        return fileService.putFile(authToken, fileName, file);
     }
 
 

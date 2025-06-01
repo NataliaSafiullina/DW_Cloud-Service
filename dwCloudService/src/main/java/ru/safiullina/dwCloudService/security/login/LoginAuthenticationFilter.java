@@ -1,11 +1,5 @@
 package ru.safiullina.dwCloudService.security.login;
 
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
-import ru.safiullina.dwCloudService.security.exeption.AuthMethodNotSupportedException;
-import ru.safiullina.dwCloudService.utils.JsonUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,11 +12,16 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import ru.safiullina.dwCloudService.dto.LoginRequest;
-
+import ru.safiullina.dwCloudService.security.exeption.AuthMethodNotSupportedException;
+import ru.safiullina.dwCloudService.utils.JsonUtils;
 
 import java.io.IOException;
 

@@ -4,9 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import ru.safiullina.dwCloudService.dto.FileListResponse;
 import ru.safiullina.dwCloudService.entity.File;
 import ru.safiullina.dwCloudService.entity.User;
 
@@ -17,9 +15,11 @@ import java.util.Optional;
 public interface FileRepository extends JpaRepository<File, Long> {
 
     Boolean existsByFileNameAndUser(String fileName, User user);
+
     Optional<File> findByFileNameAndUser(String fileName, User user);
 
     Integer countByFileNameAndUser(String fileName, User user);
+
     @Modifying
     @Query(value = "DELETE FROM files WHERE file_name = :file_name AND user_id = :user_id", nativeQuery = true)
     void deleteByFileNameAndUserId(@Param("file_name") String fileName, @Param("user_id") Long userId);
@@ -27,6 +27,7 @@ public interface FileRepository extends JpaRepository<File, Long> {
     /**
      * Аннотация @Modifying, обозначающая, что этот запрос меняет данные в БД,
      * т.е. операции INSERT, UPDATE, DELETE.
+     *
      * @param id - id файла
      */
     @Modifying

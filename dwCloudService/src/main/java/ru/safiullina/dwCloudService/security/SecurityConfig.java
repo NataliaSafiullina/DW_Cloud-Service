@@ -9,10 +9,12 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,8 +26,6 @@ import ru.safiullina.dwCloudService.security.jwt.TokenAuthenticationFilter;
 import ru.safiullina.dwCloudService.security.login.LoginAuthenticationFilter;
 import ru.safiullina.dwCloudService.security.matcher.SkipPathRequestMatcher;
 import ru.safiullina.dwCloudService.service.UserDetailsServiceImpl;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +99,7 @@ public class SecurityConfig {
     /**
      * Фильтр логирования, который перехватывает запрос на адрес /login,
      * и проверяет данные переданные для входа.
+     *
      * @return фильтр
      */
     @Bean
@@ -113,6 +114,7 @@ public class SecurityConfig {
      * CORS (Cross-Origin Resource Sharing)
      * Совместное использование ресурсов между разными источниками (CORS) - это спецификация W3C,
      * реализованная в большинстве браузеров, которая позволяет определять, какие междоменные запросы разрешены
+     *
      * @return источник
      */
     @Bean

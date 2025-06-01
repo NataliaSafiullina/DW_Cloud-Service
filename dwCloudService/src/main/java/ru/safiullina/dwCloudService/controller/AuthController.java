@@ -26,7 +26,7 @@ public class AuthController {
      * Клиентская сторона должна удалить токен из своего хранилища.
      */
     @PostMapping("logout")
-    public ResponseEntity<String> logoutUser(@RequestHeader("auth-token") String authToken){
+    public ResponseEntity<String> logoutUser(@RequestHeader("auth-token") String authToken) {
         // Тут можно добавлять токен в черный список, но так не правильно
         return ResponseEntity.ok("Success logout");
     }

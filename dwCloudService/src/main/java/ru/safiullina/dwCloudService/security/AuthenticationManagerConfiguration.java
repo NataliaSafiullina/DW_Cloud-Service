@@ -1,12 +1,12 @@
 package ru.safiullina.dwCloudService.security;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import ru.safiullina.dwCloudService.security.jwt.TokenAuthenticationProvider;
 import ru.safiullina.dwCloudService.security.login.LoginAuthenticationProvider;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 
 /**
  * AuthenticationManager не выполняет аутентификацию,

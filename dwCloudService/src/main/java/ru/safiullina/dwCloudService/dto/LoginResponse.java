@@ -10,5 +10,5 @@ import lombok.Setter;
 @Setter
 public class LoginResponse {
     @JsonProperty("auth-token")
-    private  String authToken;
+    private String authToken;
 }

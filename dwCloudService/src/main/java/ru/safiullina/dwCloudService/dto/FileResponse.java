@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FileResponse {
-     private String hash;
-     private String file;
+    private String hash;
+    private String file;
 
 }
