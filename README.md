@@ -2,6 +2,10 @@
 
 Описание и требования к проекту: [задание](./files/cloudservice.md)
 
+Timesheet по работе [тут](./files/timesheet.md)
+
+### Оглавление
+
 [Введение](#введение)
 
 [Запуск приложения](#запуск-приложения)
@@ -91,12 +95,16 @@ curl --location 'http://localhost:8080/cloud/login' \
   "password": "user"
 }'
 ```
+![login](screenshots/spaceman_login.png)
+
 #### 3. Вывод списка файлов
 ```java
 curl --location 'http://localhost:8080/cloud/list?limit=10' \
 --header 'auth-token: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzQ4NzY1NjkyLCJleHAiOjE3NDg3ODAwOTJ9.eh4vkYfZn5NTperLMCnJS46a5kBuTCwxH6TaScCafe0' \
 --header 'Cookie: JSESSIONID=10E4FBEAD21E979D812374EA94FB03EE'
 ```
+![list](screenshots/spaceman_list.png)
+
 #### 4. Добавление файла
 ```java
 curl --location 'http://localhost:8080/cloud/file?filename=file11.txt' \
@@ -125,6 +133,8 @@ curl --location 'http://localhost:8080/cloud/file?filename=file11.txt' \
 --header 'auth-token: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzQ4NzY1NjkyLCJleHAiOjE3NDg3ODAwOTJ9.eh4vkYfZn5NTperLMCnJS46a5kBuTCwxH6TaScCafe0' \
 --header 'Cookie: JSESSIONID=10E4FBEAD21E979D812374EA94FB03EE'
 ```
+![file](screenshots/spaceman_file.png)
+
 #### 8. Выход пользователя
 ```java
 curl --location --request POST 'http://localhost:8080/cloud/logout' \
